@@ -6,7 +6,7 @@ export default function GensoChat() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `**シュール:**\nやあ！元素騎士オンラインのことなら何でも聞いてね。\n\n---\n**シフペン:**\nおなかすいたー\n\n**ネコ:**\nにゃーん`
+      content: `**シュール:**\nやあ！元素騎士オンラインのことなら何でも聞いてね。\n\n---\n**シフペン:**\nおなかすいた\n\n**ネコ:**\nにゃー`
     }
   ]);
   const [input, setInput] = useState('');
