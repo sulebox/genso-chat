@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, Loader2 } from 'lucide-react';
 
@@ -13,7 +14,6 @@ export default function GensoChat() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // オートスクロール
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -32,7 +32,6 @@ export default function GensoChat() {
     setIsLoading(true);
 
     try {
-      // Next.jsのAPIルートへリクエスト
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,41 +50,65 @@ export default function GensoChat() {
     }
   };
 
-  // チョコミントカラー定義
-  // 背景: ミントグリーン (#e0f7fa), アクセント: チョコレートブラウン (#4e342e)
-  
+  // ★テキストを整形する関数（強化版）
+  // "---" に頼らず、"**名前:**" のパターンを見つけて自動で分割します
+  const formatContent = (text) => {
+    // 正規表現の解説:
+    // \*\*(.*?):\*\* -> "**名前:**" を探す
+    // [\s\S]*?        -> その後の本文を最短マッチで探す
+    // (?=(\*\*.*:\*\*)|$) -> 次の "**名前:**" が来るか、または文章の終わりまで
+    const regex = /\*\*(.*?):\*\*\s*([\s\S]*?)(?=(\*\*.*:\*\*)|$)/g;
+    
+    const blocks = [];
+    let match;
+    
+    // テキスト全体からキャラごとのブロックを抽出
+    while ((match = regex.exec(text)) !== null) {
+      blocks.push({
+        name: match[1], // 名前 (シュールなど)
+        body: match[2].replace(/---/g, '').trim() // 本文 (--- は消す)
+      });
+    }
+
+    // もしフォーマットに合わない場合（エラーメッセージなど）はそのまま表示
+    if (blocks.length === 0) {
+      return <div className="whitespace-pre-wrap">{text.replace(/---/g, '')}</div>;
+    }
+
+    return blocks.map((block, index) => (
+      <div key={index} className={index > 0 ? "mt-4 pt-4 border-t-2 border-[#b2ebf2] border-dashed" : ""}>
+        <div className="font-bold text-[#e65100] mb-1 text-sm bg-[#fff3e0] inline-block px-2 py-0.5 rounded-md">
+          {block.name}
+        </div>
+        <div className="whitespace-pre-wrap leading-relaxed">
+          {block.body}
+        </div>
+      </div>
+    ));
+  };
+
   return (
     <div className="flex flex-col h-screen bg-[#e0f7fa] font-sans text-[#4e342e]">
       
-      {/* --- ヘッダー＆キャラクターエリア --- */}
-      <div className="bg-[#b2ebf2] border-b-4 border-[#4e342e] p-4 shadow-md">
+      {/* ヘッダー */}
+      <div className="bg-[#b2ebf2] border-b-4 border-[#4e342e] p-4 shadow-md z-10">
         <div className="max-w-3xl mx-auto">
-          {/* タイトル */}
           <h1 className="text-center font-bold text-xl mb-4 tracking-widest text-[#4e342e]">
             GENSO GUIDE TEAM
           </h1>
           
-          {/* キャラクター横並び (左から: シュール, シフペン, ネコ) */}
           <div className="flex justify-center items-end gap-4 sm:gap-8">
-            
             {/* シュール */}
             <div className="flex flex-col items-center group">
-              {/* 画像コンテナ */}
               <div className="w-20 h-24 sm:w-24 sm:h-32 relative flex items-end justify-center transition-transform duration-300 group-hover:-translate-y-2">
-                 {/* 実際のアプリではここに <img src="/sule.gif" /> を入れます */}
                  <img 
                    src="/sule.gif" 
                    alt="シュール" 
                    className="object-contain h-full w-full drop-shadow-lg"
-                   onError={(e) => {
-                     e.target.onerror = null; 
-                     e.target.src="https://placehold.co/100x150/4e342e/e0f7fa?text=Sule";
-                   }}
+                   onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/100x150/4e342e/e0f7fa?text=Sule"; }}
                  />
               </div>
-              <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">
-                シュール
-              </span>
+              <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">シュール</span>
             </div>
 
             {/* シフペン */}
@@ -95,15 +118,10 @@ export default function GensoChat() {
                    src="/shifpen.gif" 
                    alt="シフペン" 
                    className="object-contain h-full w-full drop-shadow-lg"
-                   onError={(e) => {
-                     e.target.onerror = null; 
-                     e.target.src="https://placehold.co/100x120/4e342e/e0f7fa?text=Shifpen";
-                   }}
+                   onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/100x120/4e342e/e0f7fa?text=Shifpen"; }}
                  />
               </div>
-              <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">
-                シフペン
-              </span>
+              <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">シフペン</span>
             </div>
 
             {/* ネコ */}
@@ -113,46 +131,28 @@ export default function GensoChat() {
                    src="/neko.gif" 
                    alt="ネコ" 
                    className="object-contain h-full w-full drop-shadow-lg"
-                   onError={(e) => {
-                     e.target.onerror = null; 
-                     e.target.src="https://placehold.co/80x100/4e342e/e0f7fa?text=Neko";
-                   }}
+                   onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/80x100/4e342e/e0f7fa?text=Neko"; }}
                  />
               </div>
-              <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">
-                ネコ
-              </span>
+              <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">ネコ</span>
             </div>
-
           </div>
         </div>
       </div>
 
-      {/* --- チャットエリア --- */}
+      {/* チャットエリア */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-thin scrollbar-thumb-[#4e342e] scrollbar-track-transparent">
-        <div className="max-w-3xl mx-auto space-y-6">
+        <div className="max-w-3xl mx-auto space-y-6 pb-4">
           {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div
-                className={`max-w-[85%] sm:max-w-[75%] rounded-2xl p-4 shadow-sm whitespace-pre-wrap leading-relaxed ${
+            <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div className={`max-w-[90%] sm:max-w-[80%] rounded-2xl p-4 shadow-sm leading-relaxed ${
                   msg.role === 'user'
-                    ? 'bg-[#4e342e] text-[#e0f7fa] rounded-tr-none' // ユーザー：チョコ背景
-                    : 'bg-white text-[#4e342e] border-2 border-[#b2ebf2] rounded-tl-none' // Bot：白背景
+                    ? 'bg-[#4e342e] text-[#e0f7fa] rounded-tr-none whitespace-pre-wrap'
+                    : 'bg-white text-[#4e342e] border-2 border-[#b2ebf2] rounded-tl-none'
                 }`}
               >
-                {msg.role === 'assistant' ? (
-                   /* キャラクターごとのスタイル分け（簡易的） */
-                   msg.content.split('---').map((part, i) => (
-                     <div key={i} className={i > 0 ? "mt-4 pt-4 border-t border-[#b2ebf2] border-dashed" : ""}>
-                       {part.trim()}
-                     </div>
-                   ))
-                ) : (
-                  msg.content
-                )}
+                {/* 強化版の整形関数を使います */}
+                {msg.role === 'assistant' ? formatContent(msg.content) : msg.content}
               </div>
             </div>
           ))}
@@ -161,7 +161,7 @@ export default function GensoChat() {
             <div className="flex justify-start animate-pulse">
               <div className="bg-white border-2 border-[#b2ebf2] rounded-2xl rounded-tl-none p-4 shadow-sm flex items-center gap-2 text-[#4e342e]">
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span className="text-sm">3人が相談中...</span>
+                <span className="text-sm font-bold">3人が相談中...</span>
               </div>
             </div>
           )}
@@ -169,8 +169,8 @@ export default function GensoChat() {
         </div>
       </div>
 
-      {/* --- 入力エリア --- */}
-      <div className="p-4 bg-white border-t-2 border-[#b2ebf2]">
+      {/* 入力エリア */}
+      <div className="p-4 bg-white border-t-2 border-[#b2ebf2] shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
         <div className="max-w-3xl mx-auto">
           <form onSubmit={handleSubmit} className="flex gap-2">
             <input
@@ -189,8 +189,8 @@ export default function GensoChat() {
               <Send className="w-5 h-5" />
             </button>
           </form>
-          <p className="text-center text-xs text-[#a1887f] mt-2">
-            AIは間違いを言うことがあります。重要な情報は公式Wikiも確認してね。
+          <p className="text-center text-xs text-[#a1887f] mt-2 font-medium">
+            ※AIはたまに間違ったことを言うかもしれません
           </p>
         </div>
       </div>
