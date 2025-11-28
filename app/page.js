@@ -7,7 +7,7 @@ export default function GensoChat() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `**シュール:**\nやあ！元素騎士オンラインのことなら何でも聞いてね。\n\n---\n**シフペン:**\nおなかすいた\n\n**ネコ:**\nにゃー`
+      content: `**シュール:**\nやあ！元素騎士オンラインのことなら何でも聞いてね。\n\n---\n**シフペン:**\nおなかすいた\n\n**ニャア:**\nにゃーん`
     }
   ]);
   const [input, setInput] = useState('');
@@ -44,33 +44,26 @@ export default function GensoChat() {
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
     } catch (error) {
       console.error('Error:', error);
-      setMessages(prev => [...prev, { role: 'assistant', content: "**シュール:**\nごめん、ちょっと通信エラーみたいだ。\n\n---\n**シフペン:**\n電波たべたい\n\n**ネコ:**\n・・・" }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: "**シュール:**\nごめん、ちょっと通信エラーみたいだ。\n\n---\n**シフペン:**\nでんぱたべたい\n\n**ニャア:**\n・・・" }]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // ★テキストを整形する関数（強化版）
-  // "---" に頼らず、"**名前:**" のパターンを見つけて自動で分割します
+  // テキストを整形する関数
   const formatContent = (text) => {
-    // 正規表現の解説:
-    // \*\*(.*?):\*\* -> "**名前:**" を探す
-    // [\s\S]*?        -> その後の本文を最短マッチで探す
-    // (?=(\*\*.*:\*\*)|$) -> 次の "**名前:**" が来るか、または文章の終わりまで
     const regex = /\*\*(.*?):\*\*\s*([\s\S]*?)(?=(\*\*.*:\*\*)|$)/g;
     
     const blocks = [];
     let match;
     
-    // テキスト全体からキャラごとのブロックを抽出
     while ((match = regex.exec(text)) !== null) {
       blocks.push({
-        name: match[1], // 名前 (シュールなど)
-        body: match[2].replace(/---/g, '').trim() // 本文 (--- は消す)
+        name: match[1],
+        body: match[2].replace(/---/g, '').trim()
       });
     }
 
-    // もしフォーマットに合わない場合（エラーメッセージなど）はそのまま表示
     if (blocks.length === 0) {
       return <div className="whitespace-pre-wrap">{text.replace(/---/g, '')}</div>;
     }
@@ -124,17 +117,17 @@ export default function GensoChat() {
               <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">シフペン</span>
             </div>
 
-            {/* ネコ */}
+            {/* ニャア（元ネコ） */}
             <div className="flex flex-col items-center group">
               <div className="w-16 h-20 sm:w-20 sm:h-28 relative flex items-end justify-center transition-transform duration-300 group-hover:-translate-y-2 delay-200">
                  <img 
                    src="/neko.gif" 
                    alt="ネコ" 
                    className="object-contain h-full w-full drop-shadow-lg"
-                   onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/80x100/4e342e/e0f7fa?text=Neko"; }}
+                   onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/80x100/4e342e/e0f7fa?text=Nyaa"; }}
                  />
               </div>
-              <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">ネコ</span>
+              <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">ニャア</span>
             </div>
           </div>
         </div>
@@ -151,7 +144,6 @@ export default function GensoChat() {
                     : 'bg-white text-[#4e342e] border-2 border-[#b2ebf2] rounded-tl-none'
                 }`}
               >
-                {/* 強化版の整形関数を使います */}
                 {msg.role === 'assistant' ? formatContent(msg.content) : msg.content}
               </div>
             </div>
