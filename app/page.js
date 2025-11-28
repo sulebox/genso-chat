@@ -7,7 +7,7 @@ export default function GensoChat() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: `**シュール:**\nやあ！元素騎士オンラインのことなら何でも聞いてね。\n\n---\n**シフペン:**\nおなかすいた\n\n**ニャア:**\nにゃあ`
+      content: `**シュール:**\nやあ！元素騎士オンラインのことなら何でも聞いてね。\n\n---\n**シフペン:**\nおなかすいた\n\n**ニャア:**\nにゃーん`
     }
   ]);
   const [input, setInput] = useState('');
@@ -91,20 +91,8 @@ export default function GensoChat() {
           </h1>
           
           <div className="flex justify-center items-end gap-4 sm:gap-8">
-            {/* シュール */}
-            <div className="flex flex-col items-center group">
-              <div className="w-20 h-24 sm:w-24 sm:h-32 relative flex items-end justify-center transition-transform duration-300 group-hover:-translate-y-2">
-                 <img 
-                   src="/sule.gif" 
-                   alt="シュール" 
-                   className="object-contain h-full w-full drop-shadow-lg"
-                   onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/100x150/4e342e/e0f7fa?text=Sule"; }}
-                 />
-              </div>
-              <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">シュール</span>
-            </div>
-
-            {/* シフペン */}
+            
+            {/* 1. シフペン (左端) */}
             <div className="flex flex-col items-center group">
               <div className="w-20 h-24 sm:w-24 sm:h-32 relative flex items-end justify-center transition-transform duration-300 group-hover:-translate-y-2 delay-100">
                  <img 
@@ -117,7 +105,20 @@ export default function GensoChat() {
               <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">シフペン</span>
             </div>
 
-            {/* ニャア（元ネコ） */}
+            {/* 2. シュール (真ん中) */}
+            <div className="flex flex-col items-center group">
+              <div className="w-20 h-24 sm:w-24 sm:h-32 relative flex items-end justify-center transition-transform duration-300 group-hover:-translate-y-2">
+                 <img 
+                   src="/sule.gif" 
+                   alt="シュール" 
+                   className="object-contain h-full w-full drop-shadow-lg"
+                   onError={(e) => { e.target.onerror = null; e.target.src="https://placehold.co/100x150/4e342e/e0f7fa?text=Sule"; }}
+                 />
+              </div>
+              <span className="mt-2 text-xs sm:text-sm font-bold bg-[#4e342e] text-[#e0f7fa] px-3 py-1 rounded-full shadow-sm">シュール</span>
+            </div>
+
+            {/* 3. ニャア (右端) */}
             <div className="flex flex-col items-center group">
               <div className="w-16 h-20 sm:w-20 sm:h-28 relative flex items-end justify-center transition-transform duration-300 group-hover:-translate-y-2 delay-200">
                  <img 
