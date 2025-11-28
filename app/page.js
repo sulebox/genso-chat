@@ -81,10 +81,11 @@ export default function GensoChat() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#e0f7fa] font-sans text-[#4e342e]">
+    // h-screen だけでなく h-dvh (スマホ用動的高さ) も指定してガタつき防止
+    <div className="flex flex-col h-screen h-dvh bg-[#e0f7fa] font-sans text-[#4e342e]">
       
-      {/* ヘッダー */}
-      <div className="bg-[#b2ebf2] border-b-4 border-[#4e342e] p-4 shadow-md z-10">
+      {/* ヘッダー: sticky top-0 z-50 を追加して強力に固定！ */}
+      <div className="sticky top-0 z-50 bg-[#b2ebf2] border-b-4 border-[#4e342e] p-4 shadow-md">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-center font-bold text-xl mb-4 tracking-widest text-[#4e342e]">
             GENSO GUIDE TEAM
