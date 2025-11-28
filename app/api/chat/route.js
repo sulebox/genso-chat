@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// ★知識ベース：基本Q&A ＋ 4職業の詳細攻略を網羅したバージョン
+// ★知識ベース：全職業の詳細攻略など（長いので省略せず全部入っています）
 const KNOWLEDGE_BASE = `
 # 元素騎士オンライン 知識ベース
 
@@ -211,12 +211,12 @@ export async function POST(request) {
     const { message } = await request.json();
     
     const model = genAI.getGenerativeModel({ 
-      // ★動作確認済みの2.5-proを使用
       model: "gemini-2.5-pro", 
       systemInstruction: SYSTEM_PROMPT,
       generationConfig: {
         temperature: 0.7, 
-        maxOutputTokens: 1000,
+        // ★ここを 1000 から 8192 に変更しました！
+        maxOutputTokens: 8192,
       }
     });
 
