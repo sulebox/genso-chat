@@ -333,7 +333,11 @@ export async function POST(request) {
     const { message } = await request.json();
     
     const model = genAI.getGenerativeModel({ 
+<<<<<<< HEAD
       model: "gemini-2.5-flash", 
+=======
+      model: "gemini-2.5-pro", 
+>>>>>>> e051970c17f68498453a465228ae33bf057a6348
       systemInstruction: SYSTEM_PROMPT,
       generationConfig: {
         temperature: 0.7, 
